@@ -1,0 +1,42 @@
+<apex:page >
+
+    <script>
+        var SAMPLEMC = "{!$MessageChannel.SampleMessageChannel__c}";
+        var subscriptionToMC;
+    
+        function onMCPublished(message) {       
+            var textArea =  document.querySelector("#MCMessagetextArea"); 
+                textArea.innerHTML = message ? JSON.stringify(message, null, '\t') : 'no message payload' ;
+        }
+    
+        function subscribeMC() {
+                if (!subscriptionToMC) {
+                   // subscriptionToMC = sforce.one.subscribe(SAMPLEMC, onMCPublished);
+                    subscriptionToMC = sforce.one.subscribe(SAMPLEMC, onMCPublished,{ scope: "APPLICATION" });
+                }
+        }   
+    
+        function unsubscribeMC(){
+                if(subscribeMC){
+                    sforce.one.unsubscribe(subscriptionToMC);
+                    subscriptionToMC = null;
+                }
+        }
+    
+    </script>
+
+     <div>
+    <br></br>
+        <p>Subscribe to SampleMessage Channel</p>
+        <button onclick="subscribeMC()">Subscribe</button>
+        <p>Unsubscribe from subscription</p>
+        <button onclick="unsubscribeMC()">Unsubscribe</button>
+        <br></br>
+        <br></br>
+        <p>received Message:</p>
+        <textarea id="MCMessagetextArea" rows="10" style="disabled:true;resize:none;width:500px;"></textarea>
+    </div>
+
+
+
+</apex:page>
